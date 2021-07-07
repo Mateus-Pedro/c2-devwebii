@@ -1,12 +1,22 @@
 const unidadesModel = require('../models/unidades-model')
 
 exports.adicionar = (req, res) => {
-    unidadesModel.find(err => {
+    unidadesModel.find((err, unidades) => {
         if (err) {
             res.json({
                 status: 'ERRO',
                 message: 'Não foi possível recuperar a unidade'
             })
+        }
+
+        for (let i = 0; i < unidades.length; i++) {
+            if (req.body.nome == unidades[i].nome) {
+                res.json({
+                    status: 'ERRO',
+                    message: `A Unidade ${req.body.nome} já está cadastrada no endereço ${req.body.endereco}`
+                })
+                return
+            }
         }
 
         let unidade = new unidadesModel();
@@ -15,7 +25,6 @@ exports.adicionar = (req, res) => {
         unidade.endereco = req.body.endereco;
         unidade.telefone = req.body.telefone;
         unidade.email = req.body.email;
-        unidade.latlong = req.body.latlong;
 
         unidade.save((err) => {
             if (err) {
@@ -77,13 +86,23 @@ exports.atualizar = (req, res) => {
                 message: `Não foi possível atualizar a unidade com id ${id_unidade} `
             })
         } else {
-            unidades.nome = req.body.nome;
-            unidades.descricao = req.body.descricao;
-            unidades.endereco = req.body.endereco;
-            unidades.telefone = req.body.telefone;
-            unidades.email = req.body.email;
-            unidades.latlong = req.body.latlong;
-            unidades.data_alteracao = Date.now();
+
+            if (req.body.nome != null)
+                unidades.nome = req.body.nome;
+
+            if (req.body.descricao != null)
+                unidades.descricao = req.body.descricao;
+
+            if (req.body.endereco != null)
+                unidades.endereco = req.body.endereco;
+
+            if (req.body.telefone != null)
+                unidades.telefone = req.body.telefone;
+
+            if (req.body.email != null)
+                unidades.email = req.body.email;
+
+            unidades.data_alteracao = Date();
 
             unidades.save((err) => {
                 if (err) {

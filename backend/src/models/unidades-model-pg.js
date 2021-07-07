@@ -27,10 +27,6 @@ const UnidadeModel = postgres.define('unidade', {
     email: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    latlong: {
-        type: Sequelize.STRING,
-        allowNull: false
     }
 });
 

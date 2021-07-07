@@ -1,11 +1,24 @@
 const agendamentoModel = require('../models/agendamentos-model');
-const mongodb = require('../infra/mongodb')
+const unidadesModel = require('../models/unidades-model')
 
 exports.adicionar = (req, res) => {
     agendamentoModel.find(() => {
 
+        let id_unidade = req.body.unidade;
+
+        unidadesModel.findById(id_unidade, (err, unidades) => {
+            if (err || !unidades) {
+                res.json({
+                    status: 'ERRO',
+                    message: `Não foi possível encontrar a unidade ${id_unidade} `,
+                    stats: req.params
+                })
+            }
+        });
+
         let agendamento = new agendamentoModel();
 
+        agendamento.unidade = req.body.unidade;
         agendamento.data_hora_agendamento = req.body.data_hora_agendamento;
         agendamento.necessidade_especiais = req.body.necessidade_especiais;
         agendamento.observacoes = req.body.observacoes;
@@ -27,12 +40,19 @@ exports.adicionar = (req, res) => {
     });
 }
 
-exports.listar = res => {
-    agendamentoModel.find(agendamento => {
-        res.json({
-            status: 'Ok',
-            message: agendamento
-        })
+exports.listar = (req, res) => {
+    agendamentoModel.find((err, agendamento) => {
+        if (err) {
+            res.json({
+                status: 'ERRO',
+                message: 'Não foi possível listar as agendamento'
+            })
+        } else {
+            res.json({
+                status: 'Ok',
+                message: agendamento
+            })
+        }
     })
 }
 
@@ -66,9 +86,14 @@ exports.atualizar = (req, res) => {
         } else {
 
             agendamento.data_hora_agendamento = req.body.data_hora_agendamento;
-            agendamento.necessidade_especiais = req.body.necessidade_especiais;
-            agendamento.observacoes = req.body.observacoes;
-            agendamento.data_alteracao = Date.now();
+
+            if (req.body.necessidade_especiais != null)
+                agendamento.necessidade_especiais = req.body.necessidade_especiais;
+
+            if (req.body.observacoes != null)
+                agendamento.observacoes = req.body.observacoes;
+
+            agendamento.data_alteracao = Date();
 
             agendamento.save((err) => {
                 if (err) {

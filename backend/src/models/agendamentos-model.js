@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 
 const agendamentoSchema = mongoose.Schema({
+    unidade: {
+        type: mongoose.Schema.Types.String,
+        required: true
+    },
     data_hora_agendamento: {
         type: mongoose.Schema.Types.Date,
         required: true
     },
     necessidade_especiais: {
         type: mongoose.Schema.Types.Boolean,
-        required: true
+        required: false
     },
     observacoes: {
         type: mongoose.Schema.Types.String,
@@ -15,7 +19,7 @@ const agendamentoSchema = mongoose.Schema({
     },
     data_criacao: {
         type: mongoose.Schema.Types.Date,
-        default: Date.now()
+        default: Date()
     },
     data_alteracao: {
         type: mongoose.Schema.Types.Date,

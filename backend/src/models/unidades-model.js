@@ -21,10 +21,6 @@ const unidadeSchema = mongoose.Schema({
         type: mongoose.Schema.Types.String,
         required: true
     },
-    latlong: {
-        type: mongoose.Schema.Types.String,
-        required: true
-    },
     data_alteracao: {
         type: mongoose.Schema.Types.Date,
         default: null

@@ -23,7 +23,7 @@ const AgendamentoModel = postgres.define('agendamento', {
     },
     data_criacao: {
         type: Sequelize.DATE,
-        default: Date.now()
+        default: Date()
     },
     data_alteracao: {
         type: Sequelize.DATE,

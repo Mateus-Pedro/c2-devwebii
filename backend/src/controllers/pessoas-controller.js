@@ -11,23 +11,23 @@ exports.adicionar = (req, res) => {
         }
 
         for (let i = 0; i < pessoas.length; i++) {
-            if (req.body.email_pessoa == pessoa[i].email_pessoa) {
+            if (req.body.email == pessoas[i].email) {
                 res.json({
                     status: 'ERRO',
-                    message: `A pessoa ${req.body.nome} já está cadastrada com o email ${req.body.email_pessoa}`
+                    message: `A pessoa ${req.body.nome} já está cadastrada com o email ${req.body.email}`
                 })
                 return
             }
         }
 
         let pessoa = new pessoasModel();
-        pessoa.nome_pessoa = req.body.nome_pessoa;
+        pessoa.nome = req.body.nome;
         pessoa.cpf = req.body.cpf;
         pessoa.data_nascimento = req.body.data_nascimento;
-        pessoa.telefone_pessoa = req.body.telefone_pessoa;
+        pessoa.telefone = req.body.telefone;
         pessoa.grupo_prioritario = req.body.grupo_prioritario;
-        pessoa.endereco_pessoa = req.body.endereco_pessoa;
-        pessoa.email_pessoa = req.body.email_pessoa;
+        pessoa.endereco = req.body.endereco;
+        pessoa.email = req.body.email;
 
         pessoa.save((err) => {
             if (err) {
@@ -38,14 +38,14 @@ exports.adicionar = (req, res) => {
             } else {
                 res.send({
                     status: 'Ok',
-                    message: `A pessoa ${pessoa.nome_pessoa} foi inserida com sucesso`
+                    message: `A pessoa ${pessoa.nome} foi inserida com sucesso`
                 });
             }
         });
     });
 }
 
-exports.listar = res => {
+exports.listar = (req, res) => {
     pessoasModel.find((err, pessoas) => {
         if (err) {
             res.json({
@@ -86,29 +86,46 @@ exports.atualizar = (req, res) => {
         if (err || !pessoas) {
             res.json({
                 status: 'ERRO',
-                message: `Não foi possível atualizar a pessoa com id ${id_pessoa} `
+                message: `Não foi possível atualizar a pessoa com id ${id_pessoa} `,
+                stats: req.params
             })
         } else {
-            pessoas.nome_pessoa = req.body.nome_pessoa;
-            pessoas.cpf = req.body.cpf;
-            pessoas.data_nascimento = req.body.data_nascimento;
-            pessoas.telefone_pessoa = req.body.telefone_pessoa;
-            pessoas.grupo_prioritario = req.body.grupo_prioritario;
-            pessoas.endereco_pessoa = req.body.endereco_pessoa;
-            pessoas.email_pessoa = req.body.email_pessoa;
+            if (req.body.nome != null)
+                pessoas.nome = req.body.nome;
+
+            if (req.body.cpf != null)
+                pessoas.cpf = req.body.cpf;
+
+            if (req.body.data_nascimento != null)
+                pessoas.data_nascimento = req.body.data_nascimento;
+
+            if (req.body.telefone != null)
+                pessoas.telefone = req.body.telefone;
+
+            if (req.body.grupo_prioritario != null)
+                pessoas.grupo_prioritario = req.body.grupo_prioritario;
+
+            if (req.body.cpf != null)
+                pessoas.endereco = req.body.endereco;
+
+            if (req.body.email != null)
+                pessoas.email = req.body.email;
+
             pessoas.data_alteracao = Date.now();
 
             pessoas.save((err) => {
                 if (err) {
                     res.json({
                         status: 'ERRO',
-                        message: `Houve um erro ao atualizar a pessoa ${pessoas.nome_pessoa}`
+                        message: `Houve um erro ao atualizar a pessoa ${pessoas.nome}`,
+                        stats: req.params
                     })
                 } else {
                     res.json({
                         status: 'OK',
-                        message: `Os dados de ${pessoas.nome_pessoa} foram atualizados com sucesso`,
-                        novaPessoa: pessoas
+                        message: `Os dados de ${pessoas.nome} foram atualizados com sucesso`,
+                        novaPessoa: pessoas,
+                        stats: req.params
                     })
                 }
             })
@@ -125,7 +142,7 @@ exports.remover = (req, res) => {
         if (err) {
             res.json({
                 status: 'ERRO',
-                message: `Não foi possível remover a pessoa ${pessoas.nome_pessoa}`
+                message: `Não foi possível remover a pessoa ${pessoas.nome}`
             })
         } else {
             res.json({

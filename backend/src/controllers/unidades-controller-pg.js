@@ -20,8 +20,7 @@ exports.adicionarPg = async (req, res) => {
             nome_unidade: unidade.nome_unidade,
             descricao: unidade.descricao,
             endereco_unidade: unidade.endereco_unidade,
-            email_unidade: unidade.email_unidade,
-            latlong: unidade.latlong
+            email_unidade: unidade.email_unidade
         });
         res.json({
             status: 'Ok',
@@ -80,8 +79,7 @@ exports.atualizarPg = async (req, res) => {
         nome_unidade: req.body.nome_unidade,
         descricao: req.body.descricao,
         endereco_unidade: req.body.endereco_unidade,
-        email_unidade: req.body.email_unidade,
-        latlong: req.body.latlong
+        email_unidade: req.body.email_unidade
     }
 
     if (id_unidade) {
